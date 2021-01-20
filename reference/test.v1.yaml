@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  title: test
+  version: '1.0'
+  contact:
+    name: Ignacio Yus
+    email: ignacio.yus@alliance-healthcare.net
+  description: This is a test api to test stoplight
+  license:
+    name: OpenSource
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/v1/core/{userId}':
+    parameters:
+      - schema:
+          type: integer
+        name: userId
+        in: path
+        required: true
+        description: Id of an existing user.
+    get:
+      summary: Get User Info by User ID
+      tags: []
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                User sample 1:
+                  value:
+                    id: 1
+                    first: Paul
+                    last: Harris
+                    email: PaulHarris@company.org
+                    age: 43
+                    sex: male
+            application/xml:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  user:
+                    type: string
+                    minLength: 1
+                  email:
+                    type: string
+                    minLength: 1
+                  first:
+                    type: string
+                  last:
+                    type: string
+                  age:
+                    type: integer
+                required:
+                  - user
+                  - email
+          headers:
+            trans-id:
+              schema:
+                type: string
+              description: unique number for this transaction
+        '404':
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: get-users-userId
+      description: Retrieve the information of the user with the matching user ID.
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      description: This is the sample moder for an User
+      properties:
+        id:
+          type: integer
+        first:
+          type: string
+        last:
+          type: string
+        email:
+          type: string
+        age:
+          type: integer
+        sex:
+          type: string
+          enum:
+            - male
+            - female
+            - n/a
+    Error:
+      title: Error
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              errorId:
+                type: string
+              description:
+                type: string
+              errorCode:
+                type: string
+  securitySchemes:
+    API Key - 1:
+      name: API Key
+      type: apiKey
+      in: header
+    Authorization:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: ''
+          tokenUrl: ''
+          refreshUrl: ''
+          scopes: {}
